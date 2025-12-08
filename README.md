@@ -1,6 +1,6 @@
 # Snap Coin Node
 ## Installation
-To install Snap Coin Node run
+To install Snap Coin Node, run:
 ```bash
 cargo install snap-coin-node
 ```

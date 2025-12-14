@@ -1,7 +1,7 @@
-use std::{fs, net::SocketAddr, str::FromStr, sync::Arc, time::Duration, vec};
+use std::{fs, sync::Arc, time::Duration, vec};
 
 use anyhow::anyhow;
-use tokio::{sync::RwLock, time::sleep};
+use tokio::{net::lookup_host, sync::RwLock, time::sleep};
 
 use crossterm::event::{self, Event, KeyCode};
 
@@ -277,16 +277,26 @@ async fn main() -> Result<(), anyhow::Error> {
         }
     }
 
+    let mut resolved_peers = Vec::new();
+
+    for seed in &peers {
+        match lookup_host(seed).await {
+            Ok(addrs) => {
+                if let Some(addr) = addrs.into_iter().next() {
+                    resolved_peers.push(addr);
+                } else {
+                    eprintln!("No addresses found for {}", seed);
+                }
+            }
+            Err(e) => {
+                eprintln!("Failed to resolve {}: {}", seed, e);
+            }
+        }
+    }
+
     let node = Node::new(node_path, node_port);
     node.write().await.is_syncing = true;
-    let _handle = Node::init(
-        node.clone(),
-        peers
-            .iter()
-            .map(|seed| SocketAddr::from_str(seed).unwrap())
-            .collect(),
-    )
-    .await?;
+    let _handle = Node::init(node.clone(), resolved_peers).await?;
 
     if start_api {
         sleep(Duration::from_secs(1)).await;

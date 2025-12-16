@@ -24,6 +24,7 @@ mod tui;
 async fn main() -> Result<(), anyhow::Error> {
     let args = std::env::args().collect::<Vec<_>>();
     let mut peers: Vec<String> = vec![];
+    let mut reserved_ips: Vec<String> = vec![];
     let mut node_path = "./node-testnet";
     let mut start_api = true;
     let mut api_port = 3003;
@@ -35,6 +36,9 @@ async fn main() -> Result<(), anyhow::Error> {
     for arg in args.iter().enumerate() {
         if arg.1 == "--peers" && args.get(arg.0 + 1).is_some() {
             peers = args[arg.0 + 1].split(',').map(|s| s.to_string()).collect();
+        }
+        if arg.1 == "--reserved-ips" && args.get(arg.0 + 1).is_some() {
+            reserved_ips = args[arg.0 + 1].split(',').map(|s| s.to_string()).collect();
         }
         if arg.1 == "--node-path" && args.get(arg.0 + 1).is_some() {
             node_path = &args[arg.0 + 1];
@@ -81,7 +85,12 @@ async fn main() -> Result<(), anyhow::Error> {
         }
     }
 
-    let node = Node::new(node_path, node_port);
+    let mut parsed_reserved_ips = vec![];
+    for reserved_ip in reserved_ips {
+        parsed_reserved_ips.push(reserved_ip.parse().expect("Reserved ip is invalid"));
+    }
+
+    let node = Node::new(node_path, node_port, parsed_reserved_ips);
 
     let handle = Node::init(node.clone(), resolved_peers.clone()).await?;
     node.write().await.is_syncing = true;

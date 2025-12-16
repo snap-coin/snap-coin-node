@@ -41,3 +41,6 @@ Specify port on which the node is to be hosted.
 
 9. `--debug`
 Enable async debugging. You can access this by using the `tokio-console` command (you might need to install it via `cargo install tokio-console`)
+
+1. `--reserved-ips [ips]`
+Specified ip addresses, which are to be flagged as the nodes addresses.

@@ -241,6 +241,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut node_port = 8998;
     let mut create_genesis = false;
     let mut headless = false;
+    let mut no_ibd = false;
 
     // ------------------------------------------------------
     // ARGUMENTS
@@ -255,6 +256,9 @@ async fn main() -> Result<(), anyhow::Error> {
         }
         if arg.1 == "--no-api" {
             start_api = false;
+        }
+        if arg.1 == "--no-api" {
+            no_ibd = true;
         }
         if arg.1 == "--headless" {
             headless = true;
@@ -314,7 +318,7 @@ async fn main() -> Result<(), anyhow::Error> {
         genesis.compute_pow()?;
         Node::submit_block(node.clone(), genesis).await?;
     }
-    if !resolved_peers.is_empty() {
+    if !resolved_peers.is_empty() && !no_ibd {
         let peer = node.read().await.peers[0].clone();
         let node = node.clone();
         tokio::spawn(async move {

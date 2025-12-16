@@ -1,6 +1,6 @@
 [package]
 name = "snap-coin-node"
-version = "1.0.4"
+version = "1.0.5"
 edition = "2024"
 authors = ["Ice"]
 description = "A simple CLI for hosting a Snap Coin node"

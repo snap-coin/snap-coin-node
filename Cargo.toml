@@ -1,6 +1,6 @@
 [package]
 name = "snap-coin-node"
-version = "4.0.0"
+version = "5.0.0"
 edition = "2024"
 authors = ["Ice"]
 description = "A simple CLI for hosting a Snap Coin node"
@@ -13,6 +13,6 @@ console-subscriber = "0.5.0"
 crossterm = "0.29.0"
 futures = "0.3.31"
 ratatui = "0.29.0"
-snap-coin = "4.0.0"
+snap-coin = "5.1.0"
 tokio = { version = "1.48.0", features = ["full", "tracing"] }
 tracing-subscriber = "0.3.22"

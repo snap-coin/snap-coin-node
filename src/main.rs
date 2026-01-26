@@ -28,7 +28,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let args = std::env::args().collect::<Vec<_>>();
     let mut peers: Vec<String> = vec![];
     let mut reserved_ips: Vec<String> = vec![];
-    let mut node_path = "./node-testnet";
+    let mut node_path = "./node-mainnet";
     let mut start_api = true;
     let mut api_port = 3003;
     let mut node_port = 8998;
